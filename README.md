@@ -4,7 +4,7 @@
 
 ## Premise
 
-This is a demonstration module for a manuscript titled "Voltage mining for delithiation-stabilized cathodes and a machine-learning model for Li-ion cathode voltage" (see last section for citation). The purpose of this demonstration model is to provide a way for those inserested to use the LIB cathode voltage prediction model constructed in the manuscript. For details and limits of the model, please see the manuscript.
+This is a demonstration module for a manuscript titled "Voltage mining for delithiation-stabilized cathodes and a machine-learning model for Li-ion cathode voltage" (see last section for citation). The purpose of this demonstration module is to provide a way for those inserested to use the LIB cathode voltage prediction model constructed in the manuscript. For details and limits of the model, please see the manuscript.
 
 ## Installation
 
