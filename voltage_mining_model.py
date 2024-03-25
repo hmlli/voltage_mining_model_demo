@@ -1,15 +1,20 @@
 import numpy as np
 import pandas as pd
 import copy
+import re
 from sklearn.model_selection import train_test_split, RepeatedKFold
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error
+from matminer.featurizers.composition.composite import ElementProperty
+from matminer.featurizers.conversions import StrToComposition
 
 
 class VoltageMiningModel:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, model) -> None:
+        self.model = model
+        self.final_model = None
+        self.feature_list = None
 
     def insert_data(self, df, type="all") -> pd.DataFrame:
         # insert a df into the class's attribute
@@ -17,10 +22,10 @@ class VoltageMiningModel:
             self.data_all = df
             self.y_all = df.voltage
         if type == "train":
-            self.data_train=df
+            self.data_train = df
             self.y_train = df.voltage
         if type == "test":
-            self.data_test=df
+            self.data_test = df
             if "voltage" in df.keys():
                 self.y_test = df.voltage
 
@@ -52,8 +57,8 @@ class VoltageMiningModel:
                 self.featurized_data_train, self.y_train = self.featurized_data_all.loc[index_train], self.y_all[index_train]
                 self.featurized_data_test, self.y_test = self.featurized_data_all.loc[index_test], self.y_all[index_test]
 
-    def get_feature_importance(self, model_type):
-        model_type = copy.deepcopy(model_type)
+    def get_feature_importance(self):
+        model_type = copy.deepcopy(self.model)
         model = Pipeline(
             [
                 ("imputer", SimpleImputer()),  # For the failed structures
@@ -69,6 +74,10 @@ class VoltageMiningModel:
         ).sort_values(by="importance", ascending=False)
         return feature_importances_rf
 
+    def get_top_features_list(self, n_features):
+        feature_importance = self.get_feature_importance()
+        self.feature_list = list(feature_importance["feature"][:n_features])
+
     def get_final_matrix(self, process_functions=None, type="all"):
         # take featurized df's and fill final df's for training after processing
         # processing functions take in entire df and return entire df
@@ -78,22 +87,25 @@ class VoltageMiningModel:
         if type == "all":
             for function in process_functions:
                 self.final_all = function(self.featurized_data_all)
+                self.final_all = self.final_all[self.feature_list]
         if type == "train":
             for function in process_functions:
                 self.final_train = function(self.featurized_data_train)
+                self.final_train = self.final_train[self.feature_list]
         if type == "test":
             for function in process_functions:
                 self.final_test = function(self.featurized_data_test)
+                self.final_test = self.final_test[self.feature_list]
 
-    def train_model(self, model):
-        model = copy.deepcopy(model)
+    def train_model(self):
+        model = copy.deepcopy(self.model)
         model.fit(self.final_train, self.y_train)
         self.final_model = model
         return model
 
-    def run_cv(self, model, n_repeats=5):
+    def run_cv(self, n_repeats=5):
         # run cross validation on self.final_train
-        model = copy.deepcopy(model)
+        model = copy.deepcopy(self.model)
         rpf = RepeatedKFold(n_repeats=n_repeats)
         train_r2s, train_maes, train_rmses, test_r2s, test_maes, test_rmses = [], [], [], [], [], []
 
@@ -114,6 +126,23 @@ class VoltageMiningModel:
 
         return np.average(train_r2s), np.average(train_maes), np.average(train_rmses), np.average(test_r2s), np.average(test_maes), np.average(test_rmses)
 
+    def pred_from_file(self, file_path, output_csv=False):
+        pred_df = pd.read_csv(file_path, index_col=0)
+
+        self.insert_data(pred_df, type="test")
+        feature_list = [matminer_formula_feature("formula_charge"), matminer_formula_feature("formula_discharge")]
+        self.featurize_df(feature_list, type="test") # get featurized test df
+
+        self.get_final_matrix(type="test") # get final df for model prediction
+        pred_result = self.final_model.predict(self.final_test) # do model prediction using the stored final model
+        pred_df["predicted_voltage"] = pred_result
+
+        if output_csv:
+            output_path = re.sub(".csv", "_pred.csv", file_path)
+            pred_df.to_csv(output_path)
+
+        return pred_df
+
     @staticmethod
     def get_feature_matrix(orig_df, feature_functions):
         concat_df_list =[]
@@ -122,15 +151,37 @@ class VoltageMiningModel:
         return pd.concat(concat_df_list, axis=1)
 
     @staticmethod
-    def select_top_features(feature_df, n):
-        return lambda X: X[feature_df["feature"][:n]]
-
-    @staticmethod
     def evaluate_model(model, X, y):
         r2, mae, rmse = [
             model.score(X, y),
             mean_absolute_error(y, model.predict(X)),
-            mean_squared_error(y, model.predict(X), squared=False),
+            root_mean_squared_error(y, model.predict(X)),
         ]
         return r2, mae, rmse
+
+
+def matminer_formula_feature(formula):
+
+    def matminer_formula(df, formula):
+        df = df[[formula]].copy()
+        df = StrToComposition().featurize_dataframe(df, formula, ignore_errors=True)
+
+        ep_feat = ElementProperty.from_preset(preset_name="magpie")
+        df = ep_feat.featurize_dataframe(df, col_id="composition")
+
+        excluded = [formula, "composition"]
+        feature_cols = df.drop(excluded, axis=1)
+
+        prefix = ""
+        if "charge" in formula:
+            prefix = "chg_"
+        if "discharge" in formula:
+            prefix = "dis_"
+        feature_cols = feature_cols.add_prefix(prefix)
+
+        feature_cols = feature_cols.fillna(0)
+
+        return feature_cols
+
+    return lambda df: matminer_formula(df, formula)
 

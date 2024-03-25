@@ -20,6 +20,7 @@ python==3.10.14
 jupyterlab==4.1.5
 ipykernel==6.29.3
 matminer==0.9.0
+pymatgen==2023.9.25
 numpy==1.26.4
 pandas==1.5.3
 ```
