@@ -19,7 +19,10 @@ The main functionalies of this demonstration model lives in the `voltage_mining_
 python==3.10.14
 jupyterlab==4.1.5
 ipykernel==6.29.3
+xgboost==2.0.3
+dill==0.3.8
 matminer==0.9.0
+scikit-learn==1.4.1.post1
 pymatgen==2023.9.25
 numpy==1.26.4
 pandas==1.5.3
@@ -32,19 +35,27 @@ Make sure you have conda installed and start a new virtual environment to run th
 conda create -n vmm_demo python=3.10.14
 ```
 
+Then activate the environment:
+```bash
+conda activate vmm_demo
+```
+
 Then install the required dependencies using `pip`:
 
 ```bash
 pip install jupyterlab==4.1.5
+pip install xgboost==2.0.3
+pip install dill==0.3.8
 pip install matminer==0.9.0
+pip install pymatgen==2023.9.25
 ```
-The `jupyterlab` installation should also incluede the `ipykernel` installtion while the `matminer` install should also take care of the `numpy` and `pandas` installation.
+All other softwares should have been installed with the installation of the above. If you run into uninstall packages or version issues, please follow the list at the top to ensure correct software and versions.
 
 Then open the `votlage_mining_model_demo.ipynb` file with a jupyter-compatible IDE or open it in your browser:
 
 ```bash
 cd voltage_mining_model_demo
-jupyterlab
+jupyter lab
 ```
 
 and proceed to the instructions in the notebook.
