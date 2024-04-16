@@ -64,6 +64,12 @@ and proceed to the instructions in the notebook.
 
 Please cite the following work where this model is constructed if you use this code: [[arXiv](placeholder)]
 
+`arXiv:`
+```tex
+placeholder
+```
+
+`publication:`
 ```tex
 placeholder
 ```
