@@ -20,7 +20,7 @@ python==3.10.14
 jupyterlab==4.1.5
 ipykernel==6.29.3
 xgboost==2.0.3
-dill==0.3.8
+joblib==1.3.2
 matminer==0.9.0
 scikit-learn==1.4.1.post1
 pymatgen==2023.9.25
@@ -45,7 +45,7 @@ Then install the required dependencies using `pip`:
 ```bash
 pip install jupyterlab==4.1.5
 pip install xgboost==2.0.3
-pip install dill==0.3.8
+pip install joblib==1.3.2
 pip install matminer==0.9.0
 pip install pymatgen==2023.9.25
 ```
