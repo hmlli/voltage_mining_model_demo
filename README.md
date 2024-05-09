@@ -41,7 +41,7 @@ conda activate vmm_demo
 cd voltage_mining_model_demo
 ```
 
-Then navigate to the repo directory and install the required dependencies using `pip`:
+Then install the required dependencies using `pip`:
 
 ```bash
 pip install -r requirements.txt
