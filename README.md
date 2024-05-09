@@ -35,13 +35,19 @@ Make sure you have conda installed and start a new virtual environment to run th
 conda create -n vmm_demo python=3.10.14
 ```
 
-Then activate the environment:
+Then activate the environment and navigate to the repo directory:
 ```bash
 conda activate vmm_demo
+cd voltage_mining_model_demo
 ```
 
-Then install the required dependencies using `pip`:
+Then navigate to the repo directory and install the required dependencies using `pip`:
 
+```bash
+pip install -r requirements.txt
+```
+
+or manually with:
 ```bash
 pip install jupyterlab==4.1.5
 pip install xgboost==2.0.3
@@ -54,7 +60,6 @@ All other softwares should have been installed with the installation of the abov
 Then open the `votlage_mining_model_demo.ipynb` file with a jupyter-compatible IDE or open it in your browser:
 
 ```bash
-cd voltage_mining_model_demo
 jupyter lab
 ```
 
