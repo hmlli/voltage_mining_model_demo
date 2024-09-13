@@ -67,11 +67,19 @@ and proceed to the instructions in the notebook.
 
 ## Citation
 
-Please cite the following work where this model is constructed if you use this code: [[arXiv](placeholder)]
+Please cite the following work where this model is constructed if you use this code: [[arXiv]([placeholder](https://arxiv.org/abs/2409.06921))]
 
 `arXiv:`
 ```tex
-placeholder
+@article{Li2024Sep,
+	author = {Li, Haoming Howard and Chen, Qian and Ceder, Gerbrand and Persson, Kristin A.},
+	title = {{Voltage Mining for (De)lithiation-stabilized Cathodes and a Machine Learning Model for Li-ion Cathode Voltage}},
+	journal = {arXiv},
+	year = {2024},
+	month = sep,
+	eprint = {2409.06921},
+	doi = {10.48550/arXiv.2409.06921}
+}
 ```
 
 `publication:`
