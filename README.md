@@ -67,7 +67,7 @@ and proceed to the instructions in the notebook.
 
 ## Citation
 
-Please cite the following work where this model is constructed if you use this code: [[arXiv]([placeholder](https://arxiv.org/abs/2409.06921))]
+Please cite the following work where this model is constructed if you use this code: [[arXiv](https://arxiv.org/abs/2409.06921)]
 
 `arXiv:`
 ```tex
