@@ -67,7 +67,7 @@ and proceed to the instructions in the notebook.
 
 ## Citation
 
-Please cite the following work where this model is constructed if you use this code: [[publication]https://pubs.acs.org/doi/10.1021/acsami.4c15742] [[arXiv](https://arxiv.org/abs/2409.06921)]
+Please cite the following work where this model is constructed if you use this code: [[publication](https://pubs.acs.org/doi/10.1021/acsami.4c15742)] [[arXiv](https://arxiv.org/abs/2409.06921)]
 
 `publication:`
 ```tex
